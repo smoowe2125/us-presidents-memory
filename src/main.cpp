@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <vector>
 #include <unistd.h>
 #include <thread>
@@ -92,6 +93,10 @@ int main(int argc, char *argv[]) {
     std::string cmd;
 
     while(true) {
+
+        if(!Mix_PlayingMusic()) {
+            musicman.play("src/resources/theme.mp3");
+        }
 
         SDL_RenderClear(renderer);
 

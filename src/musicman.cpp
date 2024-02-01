@@ -12,7 +12,7 @@ void MusicManager::play(const char *path) {
 
     this->toplay = Mix_LoadMUS(path);
 
-    Mix_MasterVolume(32);
+    Mix_MasterVolume(33);
 
     if(!Mix_PlayingMusic()) {
         Mix_PlayMusic(this->toplay, 1000);   
