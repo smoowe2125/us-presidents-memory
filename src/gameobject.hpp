@@ -3,6 +3,8 @@
 #include <vector>
 #include <SDL2/SDL_image.h>
 
+#include "spriteman.hpp"
+
 class GameObject {
 public:
     SDL_Texture *sprite;
@@ -20,9 +22,9 @@ public:
 
     bool isCovered = true;
 
-    int card_id;
+    sprite_id card_id;
 
-    Card(SDL_Texture *uncovered, SDL_Texture *covered, int x, int y, int w, int h, int card_id);
+    Card(SDL_Texture *uncovered, SDL_Texture *covered, int x, int y, int w, int h, sprite_id card_id);
 
     void uncover();
 
@@ -33,13 +35,3 @@ class BG : public GameObject {
 public:
     BG(SDL_Texture *texture);
 };
-
-// class Grid : public GameObject {
-//     int freeX, freeY;
-//     int i;
-// public:
-//     int size;
-//     std::vector<Card *> elements;
-//     void add(Card *card);
-//     Grid(int size);
-// };

@@ -17,14 +17,14 @@ int randInRange(int smallest, int max) {
     return smallest - 1 + (rand() % max + 1);
 }
 
-std::vector<Card *> initCards(SpriteManager sman, int *freeX, int *freeY, SDL_Renderer *renderer, int matches) {
+std::vector<Card *> initCards(SpriteManager *sman, int *freeX, int *freeY, SDL_Renderer *renderer, int matches) {
     std::vector<Card *> result;
 
-    int tempID;
+    sprite_id tempID;
 
     for(int i = 0; i < matches * 2; i++) {
-        tempID = randInRange(card1, card14);
-        result.push_back(new Card(sman.get(tempID, renderer), sman.get(question, renderer), result.size() % 4 == 0 ? *freeX = 160 : *freeX += 160, *freeY += result.size() % 4 == 0 ? 160 : 0, 128, 128, tempID));
+        tempID = (sprite_id) randInRange(card1, card14);
+        result.push_back(new Card(sman->get(tempID, renderer), sman->get(question, renderer), result.size() % 4 == 0 ? *freeX = 160 : *freeX += 160, *freeY += result.size() % 4 == 0 ? 160 : 0, 128, 128, tempID));
     }
 
     return result;
@@ -35,6 +35,18 @@ void resetCards(std::vector<Card *> &cards, int &freeX, int &freeY) {
         cards[i]->transform.x = i % 4 == 0 ? freeX = 160 : freeX += 160;
         cards[i]->transform.y = i % 4 == 0 ? freeY += 160 : freeY += 0;
         if(i < 16) cards[i]->show = true;
+    }
+}
+
+void rerollCards(std::vector<Card *> &cards, int &freeX, int &freeY, SDL_Renderer *renderer, SpriteManager *sman)
+{
+    sprite_id tempID;
+
+    for(int i = 0; i < cards.size(); i++)
+    {
+        tempID = (sprite_id) randInRange(card1, card14);
+        cards[i]->destroy();
+        cards[i] = new Card(sman->get(tempID, renderer), sman->get(question, renderer), i % 4 == 0 ? freeX = 160 : freeX += 160, i % 4 == 0 ? freeY += 160 : freeY += 0, 128, 128, tempID);
     }
 }
 
@@ -56,9 +68,9 @@ int main(int argc, char *argv[]) {
 
     // mode--;
 
-    SpriteManager sman(president_mode);
+    SpriteManager *sman = new SpriteManager(president_mode);
 
-    BG *background = new BG(sman.get(bg, renderer));
+    BG *background = new BG(sman->get(bg, renderer));
 
     MusicManager musicman;
 
@@ -86,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     int index1, index2;
 
-    GameObject *checkmarkObject = new GameObject(sman.get(checkmark, renderer), 256, 256, 256, 256);
+    GameObject *checkmarkObject = new GameObject(sman->get(checkmark, renderer), 256, 256, 256, 256);
 
     int matched = 0;
 
@@ -133,9 +145,11 @@ int main(int argc, char *argv[]) {
                                                     matched++;
                                                     sleep(1);
                                                     for(int j = 0; j < cards.size(); j++) {
-                                                        if(cards[j]->card_id == card1->card_id && cards[j]->ID == card1->ID || cards[j]->card_id == card2->card_id && cards[j]->ID == card2->ID)
+                                                        if(cards[j]->ID == card1->ID || cards[j]->ID == card2->ID)
                                                         {
+                                                            cards[j]->destroy();
                                                             cards.erase(cards.begin() + j);
+                                                            cards[j]->cover();
                                                         }
                                                     }
 
@@ -159,10 +173,12 @@ int main(int argc, char *argv[]) {
                                                 cards[index1]->cover();
                                                 cards[index2]->cover();
                                             }
+
                                         }
                                     } else {
                                         card1 = cards[i];
                                         card1->isCovered = false;
+                                        cards[i]->uncover();
                                         index1 = i;
                                     }
                                 }
@@ -177,10 +193,11 @@ int main(int argc, char *argv[]) {
                         printf("console > ");
                         std::getline(std::cin, cmd);
 
-                        if(cmd == "game->simulate->win") { matched = matches; }
-                        else if(cmd == "game->simulate->crash") { throw 1; }
-                        else if(cmd == "game->cards->mode->all-are-the-same") { for(int i = 0; i < cards.size(); i++) { cards[i]->card_id = cards[0]->card_id; cards[i]->uncovered = cards[0]->uncovered; } }
-                        else if(cmd == "game->cards->all->erase") { for(int i = 0; i < cards.size(); i++) { cards.erase(cards.begin() + i); } }
+                        if(cmd == "win") { matched = matches; }
+                        else if(cmd == "crash") { throw 1; }
+                        else if(cmd == "all-are-the-same") { for(int i = 0; i < cards.size(); i++) { cards[i]->card_id = cards[0]->card_id; cards[i]->uncovered = cards[0]->uncovered; } }
+                        else if(cmd == "erase") { for(int i = 0; i < cards.size(); i++) { cards.erase(cards.begin() + i); } }
+                        else if(cmd == "reroll") { freeX = 0; freeY = -64; rerollCards(cards, freeX, freeY, renderer, sman); }
                     }
 
                 default: break;

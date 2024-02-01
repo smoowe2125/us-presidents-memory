@@ -5,7 +5,7 @@ class GameObject;
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-enum sprite {
+enum sprite_id {
     card1,
     card2,
     card3,
@@ -37,9 +37,9 @@ public:
 
     SpriteManager(int gamemode);
 
-    SDL_Texture *get(int sprite, SDL_Renderer *renderer);
+    SDL_Texture *get(sprite_id sprite, SDL_Renderer *renderer);
 
-    SDL_Surface *getSurface(int sprite);
+    SDL_Surface *getSurface(sprite_id sprite);
 };
 
 void draw(GameObject *object, SDL_Renderer *renderer);

@@ -8,13 +8,13 @@ SpriteManager::SpriteManager(int gamemode) {
     this->gameMode = gamemode;
 }
 
-SDL_Texture *SpriteManager::get(int sprite, SDL_Renderer *renderer) {
+SDL_Texture *SpriteManager::get(sprite_id sprite, SDL_Renderer *renderer) {
 
     return SDL_CreateTextureFromSurface(renderer, this->getSurface(sprite));
 
 }
 
-SDL_Surface *SpriteManager::getSurface(int sprite) {
+SDL_Surface *SpriteManager::getSurface(sprite_id sprite) {
     
     switch(sprite) {
         case card1: return IMG_Load("src/resources/biden.jpg");
