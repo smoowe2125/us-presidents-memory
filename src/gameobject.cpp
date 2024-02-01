@@ -22,7 +22,7 @@ void GameObject::destroy() {
     delete this;
 }
 
-Card::Card(SDL_Texture *uncovered, SDL_Texture *covered, int x, int y, int w, int h, int card_id) : GameObject(covered, x, y, w, h) {
+Card::Card(SDL_Texture *uncovered, SDL_Texture *covered, int x, int y, int w, int h, sprite_id card_id) : GameObject(covered, x, y, w, h) {
     this->uncovered = uncovered;
     this->covered = covered;
     this->card_id = card_id;
@@ -37,39 +37,3 @@ void Card::cover() {
 }
 
 BG::BG(SDL_Texture *texture) : GameObject(texture, 0, 0, 1280, 720) {};
-
-// void Grid::add(Card *card) {
-
-//     this->elements.push_back(card);
-//     puts("pusz bak dwa");
-
-//     if(this->elements.size() > this->size) {
-//         puts("wieksze");
-//         this->elements[i]->show = false;
-//     } else {
-
-//         puts("mniejsze");
-
-//         this->elements[i]->transform.x = this->freeX;
-//         this->elements[i]->transform.y = this->freeY;
-
-//         puts("card strzalka transform rowna sie dys strzalka fri");
-
-//         this->freeX += 64;
-
-//         puts("inkrement");
-        
-//         if(this->elements.size() % 3 == 0) {
-//             this->freeY += 64;
-//         }
-
-//     }
-
-//     i++;
-// }
-
-// Grid::Grid(int size) : GameObject(NULL, 1280 / size, 720 / size, 0, 0) {
-//     this->freeX = this->transform.x;
-//     this->freeY = this->transform.y;
-//     this->size = size;
-// }
